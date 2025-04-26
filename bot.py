@@ -32,14 +32,20 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     """处理用户消息并调用API"""
     user_message = update.message.text
     chat_id = update.effective_chat.id
-
+    
     # 发送"正在输入"状态
     await context.bot.send_chat_action(chat_id=chat_id, action="typing")
-
+    
     try:
         # 调用API
         response = get_openai_response(user_message)
-        await update.message.reply_text(response)
+        
+        # 使用Telegram的parse_mode以支持Markdown格式
+        await update.message.reply_text(
+            response, 
+            parse_mode="Markdown",
+            disable_web_page_preview=True  # 防止链接预览干扰格式
+        )
     except Exception as e:
         logger.error(f"Error in handling message: {e}")
         await update.message.reply_text("抱歉，处理您的请求时出现错误，请稍后再试。")
