@@ -3,7 +3,7 @@ import os
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from config import load_config
-from openai_handler import get_openai_response
+from openai_handler import get_openai_response,format_response
 
 # 设置日志
 logging.basicConfig(
@@ -28,6 +28,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
 
 # 处理消息
+
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """处理用户消息并调用API"""
     user_message = update.message.text
@@ -40,11 +41,13 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         # 调用API
         response = get_openai_response(user_message)
         
-        # 使用Telegram的parse_mode以支持Markdown格式
+        # 格式化响应
+        formatted_response = format_response(response)
+        
+        # 使用HTML解析模式发送消息
         await update.message.reply_text(
-            response, 
-            parse_mode="Markdown",
-            disable_web_page_preview=True  # 防止链接预览干扰格式
+            formatted_response,
+            parse_mode='HTML'  # 指定使用HTML格式
         )
     except Exception as e:
         logger.error(f"Error in handling message: {e}")
