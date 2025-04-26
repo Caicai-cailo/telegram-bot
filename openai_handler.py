@@ -11,28 +11,25 @@ logger = logging.getLogger(__name__)
 # 加载配置
 config = load_config()
 
-def format_response(response_text):
-    """优化AI回复的格式，使其在Telegram中更美观"""
+# 在openai_handler.py中添加一个格式化函数
+
+def format_response(text):
+    """格式化API返回的文本，使其在Telegram中显示更美观"""
+    # 添加更多格式化规则
+    formatted_text = text
     
-    # 处理标题格式 (使用 Telegram Markdown)
-    response_text = re.sub(r'^#\s+(.+)$', r'*\\1*', response_text, flags=re.MULTILINE)
-    response_text = re.sub(r'^##\s+(.+)$', r'_\\1_', response_text, flags=re.MULTILINE)
+    # 替换标题格式 (例如: "## 标题" -> "<b>标题</b>")
+    import re
+    formatted_text = re.sub(r'## (.*)', r'<b>\1</b>', formatted_text)
     
-    # 处理列表项，确保格式统一
-    response_text = re.sub(r'^\*\s+(.+)$', r'• \\1', response_text, flags=re.MULTILINE)
-    response_text = re.sub(r'^-\s+(.+)$', r'• \\1', response_text, flags=re.MULTILINE)
+    # 处理列表项
+    formatted_text = re.sub(r'- (.*)', r'• \1', formatted_text)
     
-    # 优化重点内容显示
-    response_text = re.sub(r'\*\*(.+?)\*\*', r'*\\1*', response_text)
+    # 格式化重要信息
+    formatted_text = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', formatted_text)
+    formatted_text = re.sub(r'_(.*?)_', r'<i>\1</i>', formatted_text)
     
-    # 提升重要分隔符的视觉效果
-    response_text = re.sub(r'^---+$', r'\n━━━━━━━━━━━━━━━\n', response_text, flags=re.MULTILINE)
-    
-    # 确保段落间有足够空行
-    response_text = re.sub(r'\n{3,}', '\n\n', response_text)
-    response_text = re.sub(r'([^\n])\n([^\n])', r'\\1\n\n\\2', response_text)
-    
-    return response_text
+    return formatted_text
 
 def get_openai_response(user_message):
     """通过API获取响应并格式化"""
@@ -43,12 +40,14 @@ def get_openai_response(user_message):
         model = config["MODEL"]
         
         # 添加系统提示来指导输出格式
-        system_prompt = """你是一个友好的助手。请按照以下格式回复:
-        1. 使用简洁清晰的语言
-        2. 重要的概念或关键词用*加粗*
-        3. 使用emoji增强表达（适量）
-        4. 适当使用列表和分隔符提高可读性
-        5. 保持回答结构化和有组织性"""
+        system_prompt = """你是一个友好的助手。请以清晰的结构回复用户：
+        1. 给重要概念添加标题，使用'## '开头
+        2. 使用列表和项目符号组织信息 (用'- '开始列表项)
+        3. 使用**粗体**标记重要内容
+        4. 使用_斜体_标记次要强调
+        5. 在主题转换处添加分隔符 (---)
+        6. 对于关键概念，使用◆标记
+        7. 保持简洁，每个段落不超过3行"""
         
         # 构建请求头
         headers = {
