@@ -1,4 +1,4 @@
-# OpenAI Telegram 聊天机器人
+# Telegram 聊天机器人
 
 这是一个Telegram机器人，可让用户通过Telegram与AI模型进行对话。机器人接收用户消息，将其发送到API，然后将回复返回给用户。
 
