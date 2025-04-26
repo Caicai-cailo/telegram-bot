@@ -15,7 +15,7 @@
 ### 方法1: 直接安装
 
 1. 克隆此仓库:
-git clone https://github.com/yourusername/openai-telegram-bot.git
+git clone https://github.com/Caicai-cailo/openai-telegram-bot.git
 cd openai-telegram-bot
 2. 安装依赖项:
 pip install -r requirements.txt
@@ -28,7 +28,7 @@ python bot.py
 ### 方法2: 使用Docker部署
 
 1. 克隆此仓库:
-git clone https://github.com/yourusername/openai-telegram-bot.git
+git clone https://github.com/Caicai-cailo/openai-telegram-bot.git
 cd openai-telegram-bot
 2. 创建一个`.env`文件，参考`.env.example`添加你的API密钥:
 cp .env.example .env
