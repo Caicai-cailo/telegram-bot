@@ -16,28 +16,30 @@
 
 1. 克隆此仓库:
 git clone https://github.com/Caicai-cailo/openai-telegram-bot.git
+
 cd openai-telegram-bot
-2. 安装依赖项:
+3. 安装依赖项:
 pip install -r requirements.txt
-3. 创建一个`.env`文件，参考`.env.example`添加你的API密钥:
+4. 创建一个`.env`文件，参考`.env.example`添加你的API密钥:
 cp .env.example .env
 然后编辑`.env`文件，添加你的Telegram Bot Token和API密钥。
-4. 启动机器人:
+5. 启动机器人:
 python bot.py
 
 ### 方法2: 使用Docker部署
 
 1. 克隆此仓库:
 git clone https://github.com/Caicai-cailo/openai-telegram-bot.git
+
 cd openai-telegram-bot
-2. 创建一个`.env`文件，参考`.env.example`添加你的API密钥:
+3. 创建一个`.env`文件，参考`.env.example`添加你的API密钥:
 cp .env.example .env
 然后编辑`.env`文件，添加你的Telegram Bot Token和API密钥。
-3. 使用Docker Compose构建并启动容器:
+4. 使用Docker Compose构建并启动容器:
 docker-compose up -d
-4. 查看日志:
+5. 查看日志:
 docker-compose logs -f
-5. 停止容器:
+6. 停止容器:
 docker-compose down
 
 
