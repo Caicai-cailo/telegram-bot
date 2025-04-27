@@ -14,18 +14,30 @@ config = load_config()
 
 # 在openai_handler.py中添加一个格式化函数
 
+import re
+
 def format_response(text):
-    """格式化API返回的文本,使其在Telegram中显示更美观"""
-    # 1. 二到六级标题均加粗
-    text = re.sub(r'^#{2,6} (.+)$', r'<b>\1</b>', text, flags=re.MULTILINE)
+    """格式化API返回的文本，使其在Telegram中显示更美观 (Markdown)"""
+    # 1.只保留一级标题
+    text = re.sub(r'^#{2,} (.+)$', r'**\1**', text, flags=re.MULTILINE)   # 将 ##... 或更高级标题转为加粗
+    
     # 2. 列表项，行首"- "
+    # Telegram Markdown对 "• " 同样只当普通文本，所以可以直接保留 "- "
+    # 但如果想统一为 "• "，如下所示：
     text = re.sub(r'^- (.+)$', r'• \1', text, flags=re.MULTILINE)
+    
     # 3. 粗体
-    text = re.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', text)
+    # 保持 Markdown 格式
+    # 可以让 AI 输出就用 **加粗**，无需替换
+    # 但如果有些是 <b>...</b>，也建议转回成 **...**
+    text = re.sub(r'<b>(.+?)</b>', r'**\1**', text)
+    
     # 4. 斜体
-    text = re.sub(r'_(.+?)_', r'<i>\1</i>', text)
+    text = re.sub(r'<i>(.+?)</i>', r'_\1_', text)
+    
     # 5. 多余空行
     text = re.sub(r'\n{3,}', r'\n\n', text)
+    
     return text.strip()
 
 def get_openai_response(user_message):
