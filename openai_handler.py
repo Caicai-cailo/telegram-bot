@@ -16,15 +16,15 @@ config = load_config()
 
 def format_response(text):
     """格式化API返回的文本,使其在Telegram中显示更美观"""
-    # 标题：行首## 标题
-    text = re.sub(r'^## (.+)$', r'<b>\1</b>', text, flags=re.MULTILINE)
-    # 列表项：行首- 内容
+    # 1. 二到六级标题均加粗
+    text = re.sub(r'^#{2,6} (.+)$', r'<b>\1</b>', text, flags=re.MULTILINE)
+    # 2. 列表项，行首"- "
     text = re.sub(r'^- (.+)$', r'• \1', text, flags=re.MULTILINE)
-    # 粗体
+    # 3. 粗体
     text = re.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', text)
-    # 斜体
+    # 4. 斜体
     text = re.sub(r'_(.+?)_', r'<i>\1</i>', text)
-    # 清除多余空行
+    # 5. 多余空行
     text = re.sub(r'\n{3,}', r'\n\n', text)
     return text.strip()
 
