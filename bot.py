@@ -47,7 +47,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         # 使用HTML解析模式发送消息
         await update.message.reply_text(
             formatted_response,
-            parse_mode='HTML'  # 指定使用HTML格式
+            parse_mode='Markdown'
         )
     except Exception as e:
         logger.error(f"Error in handling message: {e}")
