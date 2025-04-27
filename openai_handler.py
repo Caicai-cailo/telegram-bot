@@ -16,8 +16,6 @@ config = load_config()
 
 def format_response(text):
     """格式化API返回的文本,使其在Telegram中显示更美观"""
-    # 先做HTML转义，避免破坏Telegram HTML格式
-    text = html.escape(text)
     # 标题：行首## 标题
     text = re.sub(r'^## (.+)$', r'<b>\1</b>', text, flags=re.MULTILINE)
     # 列表项：行首- 内容
