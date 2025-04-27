@@ -14,22 +14,20 @@ config = load_config()
 # 在openai_handler.py中添加一个格式化函数
 
 def format_response(text):
-    """格式化API返回的文本，使其在Telegram中显示更美观"""
-    # 添加更多格式化规则
-    formatted_text = text
-    
-    # 替换标题格式 (例如: "## 标题" -> "<b>标题</b>")
-    import re
-    formatted_text = re.sub(r'## (.*)', r'<b>\1</b>', formatted_text)
-    
-    # 处理列表项
-    formatted_text = re.sub(r'- (.*)', r'• \1', formatted_text)
-    
-    # 格式化重要信息
-    formatted_text = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', formatted_text)
-    formatted_text = re.sub(r'_(.*?)_', r'<i>\1</i>', formatted_text)
-    
-    return formatted_text
+    """格式化API返回的文本,使其在Telegram中显示更美观"""
+    # 先做HTML转义，避免破坏Telegram HTML格式
+    text = html.escape(text)
+    # 标题：行首## 标题
+    text = re.sub(r'^## (.+)$', r'<b>\1</b>', text, flags=re.MULTILINE)
+    # 列表项：行首- 内容
+    text = re.sub(r'^- (.+)$', r'• \1', text, flags=re.MULTILINE)
+    # 粗体
+    text = re.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', text)
+    # 斜体
+    text = re.sub(r'_(.+?)_', r'<i>\1</i>', text)
+    # 清除多余空行
+    text = re.sub(r'\n{3,}', r'\n\n', text)
+    return text.strip()
 
 def get_openai_response(user_message):
     """通过API获取响应并格式化"""
