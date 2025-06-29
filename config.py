@@ -9,8 +9,11 @@ def load_config():
         "OPENAI_MODEL": os.getenv("OPENAI_MODEL", "gpt-3.5-turbo"),
         "OPENAI_TIMEOUT": int(os.getenv("OPENAI_TIMEOUT", "20")),
         "OPENAI_TEMPERATURE": float(os.getenv("OPENAI_TEMPERATURE", "0.7")),
+        "OPENAI_BASE_URL": os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1"),
     }
+
     missing = [k for k, v in config.items() if v is None and not k.startswith("OPENAI_")]
     if missing:
         raise EnvironmentError(f"缺少必要环境变量: {', '.join(missing)}")
+
     return config
